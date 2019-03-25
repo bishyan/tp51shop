@@ -13,7 +13,7 @@ class Admin extends Base
 {
     public function login()
     {
-        dump(app()->getAppPath());
+        dump(app()->getRootPath());
         return $this->fetch();
     }
 }
