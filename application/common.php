@@ -33,7 +33,7 @@ function delFile($path) {
         }
     }
 
-    $res = rmdir($path);
+    //$res = rmdir($path);
     closedir($handle);
 
     return $res;
