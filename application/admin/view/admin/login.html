@@ -54,7 +54,7 @@
                 <div class="formInfo">
                     <div class="formText">
                         <i class="icon icon-user"></i>
-                        <input type="text" name="username" autocomplete="off" class="input-text" value="" placeholder="用户名" />
+                        <input type="text" name="admin_name" autocomplete="off" class="input-text" value="" placeholder="用户名" />
                     </div>
                     <div class="formText">
                         <i class="icon icon-pwd"></i>
@@ -62,8 +62,8 @@
                     </div>
                     <div class="formText">
                         <i class="icon icon-chick"></i>
-                        <input type="text" name="vertify" id="vertify" autocomplete="off" class="input-text chick_ue" value="" placeholder="验证码" />
-                        <img src="/admin/Admin/vertify" class="chicuele" id="imgVerify" alt="" onclick="fleshVerify()">
+                        <input type="text" name="verify" id="verify" autocomplete="off" class="input-text chick_ue" value="" placeholder="验证码" />
+                        <img src="{:url('/admin/Admin/verify')}" class="chicuele" id="imgVerify" alt="" onclick="fleshVerify()">
                     </div>
                     <div class="formText">
                         <!--<div class="checkbox">
@@ -139,14 +139,14 @@
 
     $(function(){
         function loginsubmit(){
-            var username=true;
+            var admin_name=true;
             var password=true;
-            var vertify=true;
+            var verify=true;
 
-            if($('#theForm input[name=username]').val() == ''){
+            if($('#theForm input[name=admin_name]').val() == ''){
                 $('#error').html('<span class="error">用户名不能为空!</span>');
-                $('#theForm input[name=username]').focus();
-                username = false;
+                $('#theForm input[name=admin_name]').focus();
+                admin_name = false;
                 return false;
             }
 
@@ -157,25 +157,25 @@
                 return false;
             }
 
-            if($('#theForm input[name=vertify]').val() == ''){
+            if($('#theForm input[name=verify]').val() == ''){
                 $('#error').html('<span class="error">验证码不能为空!</span>');
-                $('#theForm input[name=vertify]').focus();
-                vertify = false;
+                $('#theForm input[name=verify]').focus();
+                verify = false;
                 return false;
             }
 
-            if(vertify && $('#theForm input[name=username]').val() != '' && $('#theForm input[name=password]').val() != ''){
+            if(verify && $('#theForm input[name=admin_name]').val() != '' && $('#theForm input[name=password]').val() != ''){
                 $.ajax({
                     async:false,
-                    url:'/index.php?m=Admin&c=Admin&a=login&t='+Math.random(),
-                    data:{'username':$('#theForm input[name=username]').val(),'password':$('#theForm input[name=password]').val(),vertify:$('#theForm input[name=vertify]').val()},
+                    url:"{:url('/admin/Admin/login')}?t="+Math.random(),
+                    data:{'admin_name':$('#theForm input[name=admin_name]').val(),'password':$('#theForm input[name=password]').val(),verify:$('#theForm input[name=verify]').val()},
                     type:'post',
                     dataType:'json',
                     success:function(res){
                         if(res.status != 1){
                             $('#error').html('<span class="error">'+res.msg+'!</span>');
                             fleshVerify();
-                            username=false;
+                            admin_name=false;
                             password=false;
                             return false;
                         }else{
@@ -199,14 +199,14 @@
         });
 
         $(document).click(function(e){
-            if(e.target.name !='vertify' && !$(e.target).parents("div").is(".submitDiv")){
+            if(e.target.name !='verify' && !$(e.target).parents("div").is(".submitDiv")){
                 $('.code').hide();
             }
         });
         //回车提交
         $(document).keyup(function(event){
             if(event.keyCode ==13){
-                var isFocus=$("#vertify").is(":focus");
+                var isFocus=$("#verify").is(":focus");
                 if(true==isFocus){
                     loginsubmit();
                 }
@@ -215,7 +215,7 @@
     });
 
     function fleshVerify(){
-        $('#imgVerify').attr('src','/index.php?m=Admin&c=Admin&a=vertify&r='+Math.floor(Math.random()*100));//重载验证码
+        $('#imgVerify').attr('src',"{:url('/admin/Admin/verify')}?t="+Math.floor(Math.random()*100));//重载验证码
     }
 
 

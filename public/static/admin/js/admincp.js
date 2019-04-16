@@ -120,7 +120,7 @@ function openItem(param) {
     $('li[data-param="' + data_str[1] + '"]').addClass('active');
     //$('li[data-param="' + data_str[0] + '"]').addClass('active');
     $this.parent().addClass('active').parents('dl:first').addClass('active').parents('div:first').show();
-    $('#workspace').attr('src','/index.php?m=Admin&c=' + data_str[1] + '&a=' + data_str[0]);
+    $('#workspace').attr('src','/admin/' + data_str[1] + '/' + data_str[0]);
     $.cookie('workspaceParam', data_str[0] + '|' + data_str[1], { expires: 1 ,path:"/"});
 }
 
