@@ -66,7 +66,6 @@ class File extends SplFileObject
     public function __construct($filename, $mode = 'r')
     {
         parent::__construct($filename, $mode);
-
         $this->filename = $this->getRealPath() ?: $this->getPathname();
     }
 
@@ -173,7 +172,6 @@ class File extends SplFileObject
     public function getMime()
     {
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
-
         return finfo_file($finfo, $this->filename);
     }
 

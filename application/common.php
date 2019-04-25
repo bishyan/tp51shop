@@ -54,11 +54,12 @@ function save_upload_image($file, $save_path)
         $state = 'ERROR' . $file->getError();
     } else {
         $return_url = '';
-        $save_name = $save_path . $info->getSaveName();
-        $mime = $file->getMime();
+        $file_name = $info->getSaveName();
+        $save_name = $save_path . $file_name;
+        $ext = strstr($file_name, '.');
 
         // 给商品图片添加水印
-        if ($save_path == 'goods/' && $mime != 'image/gif') {
+        if ($save_path == 'goods/' && $ext != '.gif') {
             waterImage($upload_path . $save_name);
         }
         $return_url = '/upload/' . $save_name;
