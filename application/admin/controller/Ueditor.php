@@ -34,6 +34,7 @@ class Ueditor extends Base
             $state = implode(',', $success);
         } else {
             $res = save_upload_image($file, $this->savePath);
+            
             $state = $res['state'];
             $url = $res['url'];
         }
