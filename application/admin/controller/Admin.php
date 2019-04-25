@@ -36,10 +36,12 @@ class Admin extends Base
                         'last_ip' => $this->request->ip(),
                         'last_login' => time()
                     ]);
-                    $right = db('Role')->where('role_id', $admin['role_id'])->find();
-                    session('act_list', $right['act_list']);
+                    $role = db('Role')->where('role_id', $admin['role_id'])->find();
+                    session('act_list', $role['act_list']);
+                    session('role_name', $role['role_name']);
                     session('admin_id', $admin['admin_id']);
                     session('admin_name', $admin['admin_name']);
+
                     //session();
                     //$this->redirect('/admin/Index/index');
                     ajaxReturn(['status'=>1, 'url'=>url('/admin/Index/index')]);
@@ -92,6 +94,7 @@ class Admin extends Base
     }
 
     public function insertAdmin() {
+
         if ($this->request->isPost()) {
             if (($success = $this->validateData('Admin.insert')) !== true) {
                 $msg = array_values($success);
@@ -121,50 +124,73 @@ class Admin extends Base
         }
     }
 
-    public function editAdmin()
+    public function editAdmin($admin_id)
     {
-        $admin_id = input('admin_id');
-        if ($admin_id != '') {
-            $admin_info = db('admin')->where('admin_id', $admin_id)->find();
+        //$admin_id = input('admin_id', '');
+        if ($this->checkPri($admin_id))
+        {
+            $admin_info = db('admin')->where('admin_id', $admin_id)->find(); //当前管理员
             $roles = db('role')->field('role_id, role_name')->select();
 
             $this->assign('admin_info', $admin_info);
             $this->assign('roles', $roles);
-        } else {
-            ajaxReturn(['status'=>0, 'msg'=>'参数有误']);
-        }
 
-        return $this->fetch();
+            return $this->fetch();
+        }
     }
 
-    public function updateAdmin()
-    {
-        //dump(input('post.')); exit;
-        if ($this->request->isPost()) {
-            //dump(input('post.'));exit;
-            // 验证数据
-            $success = $this->validateData('Admin.update');
-            if ($success !== true) {
-                $msg = array_values($success);
-                ajaxReturn(['status'=>0, 'msg'=>$msg[0], 'result'=>$success]);
-            } else {
-                $data = input('post.');
-                if (empty($data['password'])) {
-                    unset($data['password']);
-                } else {
-                    $data['password'] = encrypt($data['password']);
-                }
+    private function checkPri($admin_id) {
+        if ($admin_id > 0) {
+            if (session('admin_id') != $admin_id && session('admin_id') != 1) {
+                $this->error('无权操作他人信息');
+            }
+        } else {
+            $this->error('参数有误');
+        }
 
-                $admin = db('Admin')->where('admin_name', $data['admin_name'])->where('admin_id', '<>', $data['admin_id'])->find();
-                if ($admin === null) {
-                    $res = model('admin')->isUpdate()->save($data);
-                    if ($res) {
-                        ajaxReturn(['status'=>1, 'msg'=>'管理员修改成功', 'url'=>url('/admin/Admin/adminList')]);
-                    } else {
-                        ajaxReturn(['status'=>0, 'msg'=>'管理员修改失败']);
-                    }
+//        $admin_info = Db::name('admin')->where('admin_id', $admin_id)->find();
+//        if ($admin_info === null) {
+//            $this->error('参数有误');
+//        } else {
+//            # 不是本人
+//            if (session('admin_id') != $admin_id) {
+//                $this->error('无权操作他人信息');
+//            }
+//
+//        }
+        return true;
+    }
+
+    public function updateAdmin($admin_id)
+    {
+        if ($this->checkPri($admin_id))
+        {
+            if ($this->request->isPost()) {
+                //dump(input('post.'));exit;
+                // 验证数据
+                $success = $this->validateData('Admin.update');
+                if ($success !== true) {
+                    $msg = array_values($success);
+                    ajaxReturn(['status' => 0, 'msg' => $msg[0], 'result' => $success]);
                 } else {
-                    ajaxReturn(['status'=>0, 'msg'=>'用户名已存在']);
+                    $data = input('post.');
+                    if (empty($data['password'])) {
+                        unset($data['password']);
+                    } else {
+                        $data['password'] = encrypt($data['password']);
+                    }
+
+                    $admin = db('Admin')->where('admin_name', $data['admin_name'])->where('admin_id', '<>', $data['admin_id'])->find();
+                    if ($admin === null) {
+                        $res = model('admin')->isUpdate()->save($data);
+                        if ($res) {
+                            ajaxReturn(['status' => 1, 'msg' => '管理员修改成功', 'url' => url('/admin/Admin/adminList')]);
+                        } else {
+                            ajaxReturn(['status' => 0, 'msg' => '管理员修改失败']);
+                        }
+                    } else {
+                        ajaxReturn(['status' => 0, 'msg' => '用户名已存在']);
+                    }
                 }
             }
         }
@@ -172,21 +198,24 @@ class Admin extends Base
 
     public function delAdmin() {
         $admin_id = input('post.admin_id', '');
-        //dump($admin_id);exit;
-        if (empty($admin_id)) {
-            ajaxReturn(['status'=>0, 'msg'=>'非法参数']);
-        } else {
-            $res = db('Admin')->where('admin_id', $admin_id)->delete();
 
-            if ($res) {
-                ajaxReturn(['status'=>1, 'msg'=>'管理员删除成功']);
+        if ($this->checkPri($admin_id)) {
+            if (empty($admin_id)) {
+                ajaxReturn(['status'=>0, 'msg'=>'非法参数']);
             } else {
-                ajaxReturn(['status'=>0, 'msg'=>'管理员删除失败']);
+                $res = db('Admin')->where('admin_id', $admin_id)->delete();
+
+                if ($res) {
+                    ajaxReturn(['status'=>1, 'msg'=>'管理员删除成功']);
+                } else {
+                    ajaxReturn(['status'=>0, 'msg'=>'管理员删除失败']);
+                }
             }
         }
     }
 
-    public function modify_pwd() {
+    public function modify_pwd($admin_id)
+    {
         if ($this->request->isPost())
         {
             $data = input('post.');
@@ -208,7 +237,6 @@ class Admin extends Base
             }
             exit;
         }
-
 
         return $this->fetch();
     }

@@ -1,4 +1,46 @@
 
+#创建商品品牌表
+DROP TABLE IF EXISTS newshop03_brand;
+
+CREATE TABLE newshop03_brand(
+  `brand_id` smallint not null AUTO_INCREMENT COMMENT '品牌id',
+  `brand_name` varchar(60) not null COMMENT '品牌名称',
+  `url` varchar(150) not null DEFAULT '' COMMENT '品牌网址',
+  `logo` varchar(150) not null default '' COMMENT '品牌logo',
+  `sort_order` tinyint unsigned not null default 50 comment '排序',
+  `brand_desc` varchar(512) not null default '' comment '品牌描述',
+  `cat_name` varchar(128) DEFAULT '' COMMENT '品牌分类',
+  `parent_cat_id` smallint default 0 comment '分类id',
+  `cat_id` smallint default 0 comment '分类id',
+  `is_hot` tinyint  not null default 0 comment '是否推荐',
+  `create_time` int not null default 0 comment '添加时间',
+  `update_time` int not null default 0 comment '更新时间',
+  PRIMARY KEY (`brand_id`)
+)engine=MyISAM default charset=utf8;
+
+# 创建商品分类表
+drop table if exists newshop03_category;
+
+CREATE TABLE newshop03_category(
+  `cat_id` smallint not null AUTO_INCREMENT COMMENT '分类id',
+  `cat_name` varchar(60) not null comment '分类名称',
+  `mobile_name` varchar(50) not null comment '手机端分类名称',
+  `parent_id` smallint unsigned not null default 0 comment '父id',
+  `parent_id_path` varchar(128) not null default '' comment '家庭图谱',
+  `level` tinyint not null default 0 comment '等级',
+  `is_show` tinyint not null default 1 comment '是否显示',
+  `cat_group` tinyint unsigned not null default 0 comment '分组',
+  `image` varchar(150) not null default '' comment '分类图片',
+  `is_hot` tinyint not null default 0 comment '是否推荐',
+  `commission_rate` tinyint not null default 0 comment '分佣比例',
+  `sort_order` tinyint unsigned not null default 50 comment '排序',
+  `create_time` int not null default 0 comment '添加时间',
+  `update_time` int not null default 0 comment '更新时间',
+  PRIMARY KEY (`cat_id`),
+  KEY `parent_id` (`parent_id`)
+)engine=MyISAM default charset = utf8;
+
+====================  RBAC ===============================
 # 创建权限表
 drop table if exists newshop03_system_menu;
 

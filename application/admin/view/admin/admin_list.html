@@ -110,7 +110,7 @@
                         <td align="center" class="handle">
                             <div style="text-align: center; width: 170px; max-width:170px;">
                                 <a href="{:url('/admin/Admin/editAdmin/admin_id/' . $v['admin_id'])}" class="btn blue"><i class="fa fa-pencil-square-o"></i>编辑</a>
-                                {if condition="$v['admin_id'] >1"}
+                                {if condition="session('admin_id') == 1"}
                                 <a class="btn red"  href="javascript:void(0)" data-url="{:url('/admin/Admin/delAdmin')}" data-id="{$v.admin_id}" onClick="delfun(this)"><i class="fa fa-trash-o"></i>删除</a>
                                 {/if}
                             </div>

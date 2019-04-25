@@ -51,4 +51,13 @@ class Index extends Base
         //dump($sys_info);
         return $sys_info;
     }
+
+    public function changeTableVal() {
+        $table = input('table');
+        $id_name = input('id_name');
+        $id_value = input('id_value');
+        $field = input('field');
+        $value = input('value');
+        Db::name($table)->where($id_name, $id_value)->setField($field, $value);
+     }
 }

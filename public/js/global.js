@@ -208,8 +208,9 @@ function checkTelphones(tel){
  * @callback string  回调函数(单张图片返回保存路径字符串，多张则为路径数组 )
  */
 function GetUploadify(num,elementid,path,callback,fileType)
-{	   	
-	var upurl ='/index.php?m=Admin&c=Uploadify&a=upload&num='+num+'&input='+elementid+'&path='+path+'&func='+callback+'&fileType='+fileType;
+{
+
+	var upurl ='/Admin/Uploadify/upload?num='+num+'&input='+elementid+'&path='+path+'&func='+callback+'&fileType='+fileType;
     var title = '上传图片';
     if(fileType == 'Flash'){
         title = '上传视频';
@@ -277,7 +278,7 @@ function ClearPicArr(val)
 {
 	$("li[rel='"+ val +"']").remove();
 	$.get(
-		"{:U('Admin/Uploadify/delupload')}",{action:"del", filename:val},function(){}
+		"{:url('/Admin/Uploadify/delupload')}",{action:"del", filename:val},function(){}
 	);
 }
 /*
@@ -330,15 +331,17 @@ function get_category(id,next,select_id){
         $('#'+next).empty().html(html);
         return false;
     }
+
     $.ajax({
         type : "GET",
-        url  : '/index.php?m=Home&c=api&a=get_category&parent_id='+ id,
+        url  : '/Admin/Category/getCategory?parent_id='+ id,
         dataType:'json',
         success: function(data) {
 			var html = "<option value='0'>请选择商品分类</option>";
+
             if(data.status == 1){
                 for (var i=0 ;i<data.result.length;i++){
-                    html+= "<option value='"+data.result[i].id+"'>"+data.result[i].name+"</option>";
+                    html+= "<option value='"+data.result[i].cat_id+"'>"+data.result[i].cat_name+"</option>";
                 }
             }
             $('#'+next).empty().html(html);

@@ -17,7 +17,7 @@ class Base extends Controller
         define('CONTROLLER_NAME', $this->request->controller());
         define('ACTION_NAME', $this->request->action());
         //echo ACTION_NAME; EXIT;
-        $on_need_login = ['verify', 'login'];
+        $on_need_login = ['verify', 'login', 'logout'];
         if (in_array(ACTION_NAME, $on_need_login)) {
             return;
         } else {
@@ -52,6 +52,9 @@ class Base extends Controller
     protected function validateData($validate_name)
     {
         $res = $this->validate(input('post.'), $validate_name);
+//        if ($res !== true) {
+//            ajaxReturn(['status'=>0, 'msg'=>'']);
+//        }
         return $res;
     }
 }

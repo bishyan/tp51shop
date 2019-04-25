@@ -137,10 +137,10 @@ function system_menus() {
                     'child' => [
                         ['name'=>'商品列表', 'act'=>'goodsList', 'op'=>'Goods'],
                         array('name' => '淘宝导入', 'act'=>'index', 'op'=>'Import'),
-                        array('name' => '商品分类', 'act'=>'categoryList', 'op'=>'Goods'),
+                        array('name' => '商品分类', 'act'=>'cateList', 'op'=>'Category'),
                         array('name' => '库存管理', 'act'=>'stockList', 'op'=>'Goods'),
-                        array('name' => '商品模型', 'act'=>'type_list', 'op'=>'Goods'),
-                        array('name' => '品牌列表', 'act'=>'brandList', 'op'=>'Goods'),
+                        array('name' => '商品模型', 'act'=>'typeList', 'op'=>'GoodsType'),
+                        array('name' => '品牌列表', 'act'=>'brandList', 'op'=>'Brand'),
                         array('name' => '评论列表', 'act'=>'index', 'op'=>'Comment'),
                         array('name' => '商品咨询', 'act'=>'ask_list', 'op'=>'Comment'),
                     ]

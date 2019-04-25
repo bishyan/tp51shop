@@ -74,7 +74,7 @@
             </dl>
             <dl>
                 <dt class="name">{$Think.session.admin_name}</dt>
-                <dd class="group">管理员</dd>
+                <dd class="group">{$Think.session.role_name}</dd>
             </dl>
             <span class="avatar">
 			<!-- 屏蔽管理员头像上传 -->
@@ -83,7 +83,7 @@
             <div class="manager-menu">
                 <div class="title">
                     <h4>最后登录</h4>
-                    <a href="javascript:void(0);" onClick="CUR_DIALOG = ajax_form('modifypw', '修改密码', '/admin/Admin/modify_pwd');" class="edit-password">修改密码</a>
+                    <a href="javascript:void(0);" onClick="CUR_DIALOG = ajax_form('modifypw', '修改密码', '/admin/Admin/modify_pwd/admin_id/{$Think.session.admin_id}');" class="edit-password">修改密码</a>
                 </div>
                 <div class="login-date"> {$Think.session.last_login} <span>(IP: {$Think.session.last_ip} )</span> </div>
                 <div class="title">

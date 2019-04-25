@@ -62,7 +62,7 @@ function changeTableVal(table,id_name,id_value,field,obj)
 				var value = 0;
 		 }                                                 
 		$.ajax({
-				url:"/index.php?m=Admin&c=Index&a=changeTableVal&table="+table+"&id_name="+id_name+"&id_value="+id_value+"&field="+field+'&value='+value,			
+				url:"/Admin/Index/changeTableVal?table="+table+"&id_name="+id_name+"&id_value="+id_value+"&field="+field+'&value='+value,
 				success: function(data){									
 					$(obj).attr('src',src);           
 				}

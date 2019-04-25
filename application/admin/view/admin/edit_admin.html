@@ -47,7 +47,7 @@
                 </dd>
 
             </dl>
-            {if condition="$admin_info['admin_id'] != 1"}
+            {if condition="($admin_info['admin_id'] gt 1) AND (session('act_list') == 'all')"}
             <dl class="row">
                 <dt class="tit">
                     <label><em>*</em>所属角色</label>

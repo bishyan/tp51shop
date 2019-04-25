@@ -673,6 +673,7 @@ abstract class Model implements \JsonSerializable, \ArrayAccess
                 ->field($allowFields)
                 ->insert($this->data, $this->replace, false, $sequence);
 
+
             // 获取自动增长主键
             if ($result && $insertId = $db->getLastInsID($sequence)) {
                 $pk = $this->getPk();

@@ -105,14 +105,14 @@ class Right extends Base
             //$validate = Validate::make(['name' => 'require|max:60','right' => 'require'], ['name.require'=>'权限名称不能为空','right.require'=>'请选择权限码']);
             //$res = $this->validate(input('post.'), ['name' => 'require|max:60',/*'right' => 'require'*/], ['name.require'=>'权限名称不能为空','right.require'=>'请选择权限码'], true);
             //$res = $validate->batch()->check(input('post.'));
-            $validate = new RightValidate();
-            $res = $validate->batch()->check(input('post.'));
-
-            if(!$res) {
-                $err_msg = $validate->getError();
+            //$validate = new RightValidate();
+            $res = $this->validateData('Right');
+            if($res !== true) {
+                //$err_msg = $validate->getError();
                 //$errStr = implode(',', $err_msg);
                 //ajaxReturn(['status'=>0, 'msg'=>$error[0], 'data'=>$res]);
-                $this->error(implode(',', $err_msg));
+                //$this->error(implode(',', $err_msg));
+                $this->error(implode(',', $res));
             }
 
             $data = input('post.');
@@ -166,11 +166,9 @@ class Right extends Base
     public function updateRight() {
         if ($this->request->isPost()) {
             // 验证数据
-            $validate = new RightValidate();
-            $res = $validate->batch()->check(input('post.'));
-            if ($res === false) {
-                $err_msg = $validate->getError();
-                $this->error(implode(',', $err_msg));
+            $res = $this->validateData('Right');
+            if ($res !== true) {
+                $this->error(implode(',', $res));
             } else {
                 $data = input('post.');
                 $data['right'] = implode(',', $data['right']);

@@ -37,13 +37,10 @@ class Role extends Base
     public function insertRole() {
         if ($this->request->isPost()) {
             // 数据验证
-            $validate = new RoleValidate();
-            $success = $validate->batch()->check(input('post.'));
-            if ($success === false) {
-                $err_arr = $validate->getError();
-                dump($err_arr);
+            $success = $this->validateData('Role');
+            if ($success !== true) {
+                $this->error(implode(',',$success));
             } else {
-
                 $data = input('post.');
                 $data['act_list'] = isset($data['right'])? implode(',', $data['right']) : '';
                 if (empty($data['act_list'])) {
@@ -94,14 +91,11 @@ class Role extends Base
 
     public function updateRole() {
         if ($this->request->isPost()) {
-            //dump(input('post.'));
             // 验证数据
-            $validate = new RoleValidate();
-            $success = $validate->batch()->check(input('post.'));
-            if ($success === false) {
-                $errArr = $validate->getError();
-                dump($errArr);
-            } else {
+            $success = $this->validateData('Role');
+            if ($success !== true) {
+                $this->error(implode(',',$success));
+            }else {
                 $data = input('post.');
                 $data['act_list'] = isset($data['right'])? implode(',', $data['right']) : '';
                 //dump($data);

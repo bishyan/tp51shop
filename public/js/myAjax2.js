@@ -51,6 +51,7 @@ function del_fun(del_url)
 // 修改指定表的指定字段值 包括有按钮点击切换是否 或者 排序 或者输入框文字
 function changeTableVal(table, id_name, id_value, field, obj,yes,no) {
 	var value = $(obj).val();
+
     if(yes == '' || typeof(yes)== 'undefined')yes='是';
     if(no == '' || typeof(no) == 'undefined')no='否';
 	if ($(obj).hasClass('no')) // 图片点击是否操作
@@ -66,7 +67,7 @@ function changeTableVal(table, id_name, id_value, field, obj,yes,no) {
 	}
 
 	$.ajax({
-		url: "/index.php?m=Admin&c=Index&a=changeTableVal&table=" + table + "&id_name=" + id_name + "&id_value=" + id_value + "&field=" + field + '&value=' + value,
+		url: "/Admin/Index/changeTableVal?table=" + table + "&id_name=" + id_name + "&id_value=" + id_value + "&field=" + field + '&value=' + value,
 		success: function (data) {
 			if (!$(obj).hasClass('no') && !$(obj).hasClass('yes'))
 				layer.msg('更新成功', {icon: 1});
