@@ -48,7 +48,7 @@ function save_upload_image($file, $save_path)
 
     //移动文件到指定目录
     $info = $file->rule(function(){
-        return md5(mt_rand());
+        return md5(uniqid(microtime(),true));
     })->move($upload_path . $save_path);
     if (!$info) {
         $state = 'ERROR' . $file->getError();
