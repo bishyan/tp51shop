@@ -1,3 +1,50 @@
+#创建商模型表
+DROP TABLE IF EXISTS newshop03_goods_type;
+CREATE TABLE newshop03_goods_type(
+  `type_id` smallint not null auto_increment comment '商品模型id',
+  `type_name` varchar(60) not null comment '商品模型名称',
+  PRIMARY KEY(`type_id`)
+)engine=MyISAM default charset=utf8;
+
+#创建商品规格表
+DROP TABLE IF EXISTS newshop03_spec;
+
+CREATE TABLE newshop03_spec (
+   `spec_id` smallint unsigned not null auto_increment comment '规格id',
+   `spec_name` varchar(60) not null comment '商品规格名称',
+   `type_id` smallint default 0 comment '规格所属类型',
+   `sort_order` tinyint unsigned not null DEFAULT 50 comment '排序',
+   `is_upload_image` tinyint unsigned not null DEFAULT 0 comment '是否可上传规格图 0不可以 1可以',
+   `search_index` tinyint unsigned not null DEFAULT 1 comment '是否需要检索: 1是 0否',
+   PRIMARY KEY(`spec_id`)
+)engine=MyISAM default charset=utf8;
+
+
+#创建商品规格项表
+DROP TABLE IF EXISTS newshop03_spec_item;
+
+CREATE TABLE newshop03_spec_item (
+    `id` int not null auto_increment comment '规格项id',
+    `item` varchar(50) not null comment '商品规格项',
+    `spec_id` smallint not null comment '规格项所属规格id',
+    `sort_order` tinyint unsigned not null DEFAULT 0 comment '排序',
+    PRIMARY KEY(`id`)
+)engine=MyISAM default charset=utf8;
+
+
+
+#创建商品规格表
+DROP TABLE IF EXISTS newshop03_attribute;
+
+CREATE TABLE newshop03_attribute (
+  `attr_id` smallint unsigned not null auto_increment comment '属性id',
+  `attr_name` varchar(60) not null comment '属性名称',
+  `type_id` smallint unsigned default 0 comment '规格所属类型',
+  `attr_index` tinyint unsigned not null DEFAULT 0 comment '是否显示 0不显示 1显示',
+  `attr_values` text comment '可选值列表',
+  `sort_order` tinyint unsigned not null DEFAULT 50 comment '排序',
+  PRIMARY KEY(`attr_id`)
+)engine=MyISAM default charset=utf8;
 
 #创建商品品牌表
 DROP TABLE IF EXISTS newshop03_brand;

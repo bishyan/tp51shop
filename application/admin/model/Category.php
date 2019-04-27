@@ -36,6 +36,8 @@ class Category extends Model
             } else {
                 return ['ok'=>0, 'err'=>'分类等级和家族图谱更改失败'];
             }
+        } else {
+            return ['ok'=>0, 'err'=>'商品分类编辑失败'];
         }
     }
 

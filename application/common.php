@@ -11,10 +11,57 @@
 
 // 应用公共文件
 
+// md5加密
 function encrypt($str) {
     return md5(config('MD5_CODE') . $str);
 }
 
+
+//function saveDataToTable($data, $table_name, $id_name) {
+//    if (isset($data[$id_name])) {
+//        # 修改
+//        Db::name('spec')->update($data);
+//        foreach($data['item'] as $item) {
+//            if ($item['item'] != '') {
+//                if (isset($item['id'])) {
+//                    # 原有的
+//                    Db::name('spec_item')->update([
+//                        'item' => $item['item'],
+//                        'id' => $item['id'],
+//                        'spec_id' => $data['spec_id']
+//                    ]);
+//                } else {
+//                    # 添加新的规格项
+//                    Db::name('spec_item')->insert([
+//                        'item'=>$item['item'],
+//                        'spec_id'=>$data['spec_id']
+//                    ]);
+//                }
+//            }
+//        }
+//    } else {
+//        # 增加
+//        $spec_id = Db::name('spec')->insertGetId();
+//        if ($spec_id) {
+//            foreach ($data['item'] as $key => $item) {
+//                dump($item[$key]);
+//                if ($item['item'] != '') {
+//                    Db::name('spec_item')->insert([
+//                        'item' => $item['item'],
+//                        'spec_id' => $spec_id
+//                    ]);
+//                }
+//            }
+//        }
+//    }
+//}
+
+
+/**
+ * 递归删除文件
+ * @param $path
+ * @return bool
+ */
 function delFile($path) {
 
     if(!is_dir($path)) {
@@ -39,6 +86,12 @@ function delFile($path) {
     return true;
 }
 
+/**
+ * 上传文件到指定目录
+ * @param $file         文件对象
+ * @param $save_path    存储地址
+ * @return array
+ */
 function save_upload_image($file, $save_path)
 {
     $return_url = '';
@@ -71,6 +124,10 @@ function save_upload_image($file, $save_path)
     ];
 }
 
+/**
+ * 添加水印
+ * @param $img_path
+ */
 function waterImage($img_path) {
     $image = \think\Image::open($img_path);
     $water = config('water');
