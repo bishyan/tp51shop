@@ -11,6 +11,57 @@
 
 // admin模块公共文件
 
+// 生成goods_sn
+function generate_goods_sn($goods_id)
+{
+    return 'GG'.str_pad($goods_id, 7, '0', STR_PAD_LEFT);
+}
+
+/**
+ * 获取多个数组的笛卡尔积
+ */
+function cartesian_product()
+{
+    $data = func_get_args();
+    $data = current($data);
+    $count = count($data);
+    $arr = array_shift($data);
+    $result = [];
+    foreach($arr as $key=>$val) {
+        $result[] = (array)$val;
+    }
+    //dump($result);
+    //dump($data);
+    foreach($data as $k=>$v) {
+        $result = cartesian_product_array($result, $v);
+    }
+
+    return $result;
+}
+
+/**
+ * 两个数组的笛卡尔积
+ * @param $arr1
+ * @param $arr2
+ * @return array
+ */
+function cartesian_product_array($arr1, $arr2)
+{
+    $result = [];
+    foreach($arr1 as $val1)
+    {
+        foreach ($arr2 as $val2)
+        {
+             $temp = $val1;
+             $temp[] = $val2;
+             $result[] = $temp;
+        }
+    }
+    return $result;
+}
+
+
+
 function ajaxReturn($value) {
     exit(json_encode($value));
 }

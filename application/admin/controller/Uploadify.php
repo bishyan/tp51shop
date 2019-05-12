@@ -25,7 +25,7 @@ class Uploadify extends Base
             $type = 'jpg,png,gif,jpeg';
         }
         $info = [
-            'num'       => input('num/d'),
+            'num'       => input('num/d', 1),
             'fileType'  => $fileType,
             'title'     => '',
             'upload'    => $upload,
@@ -122,7 +122,8 @@ class Uploadify extends Base
 
     public function delUpload()
     {
-        $file = $this->app->getRootPath() . 'public' .input('url', '');
+        $file = getcwd() .input('url', '');
+
         if (is_file($file)) {
             unlink($file);
             ajaxReturn(1);

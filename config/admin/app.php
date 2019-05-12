@@ -5,6 +5,7 @@ return [
 
     // 上传设置
     'image_upload_limit_size' => 3,  // 图片上传大小限制, 单位 M
+    'upload_path' => app()->getRootPath() . 'public/upload/',
 
     //水印配置
     'water'     => [

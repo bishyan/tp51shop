@@ -21,8 +21,9 @@ class Brand extends Base
             $where[] = ['brand_name', 'like', "%{$keyword}%"];
         }
 
+
         $brands = Db::name('brand')->where($where)->order('sort_order')->paginate(2);
-        //dump($brands->nickname);
+        //dump($brands);
         $this->assign('brands', $brands);
         $cats = Db::name('category')->column('cat_id, cat_name');
         //dump($cats);

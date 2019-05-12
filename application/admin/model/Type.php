@@ -32,6 +32,7 @@ class Type extends Model
             if ($info = $this->afterSave($this->type_id)) {
                 return [
                     'ok' => 1,
+                    'type_id' => $this->type_id
                 ];
             } else {
                 return ['ok' => 0, 'err' => '商品模型的规格或规格项操作失败'];

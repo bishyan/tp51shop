@@ -1,3 +1,117 @@
+#创建商品表
+DROP TABLE IF EXISTS newshop03_goods;
+CREATE TABLE newshop03_goods(
+       `goods_id` mediumint unsigned not null auto_increment comment '商品id',
+       `gods_name` varchar(120) not null comment '商品名称',
+       `goods_sn` varchar(60) not null default '' comment '商品编号',
+       `cat_id` smallint unsigned default 0 comment '分类id',
+       `extend_cat_id` smallint default 0 comment '扩展分类id',
+       `click_count` mediumint unsigned not null default 0 comment '点击数',
+       `brand_id` smallint unsigned default 0 comment '品牌id',
+       `store_count` smallint unsigned not null default 0 comment '库存数量',
+       `comment_count` smallint unsigned not null default 0 comment '商品评论数',
+       `weight` mediumint unsigned not null default 0 comment '商品重量, 单位为克',
+       `volume` float(10,4) unsigned not null default '0.0000' comment '商品体积, 单位为立方米',
+       `market_price` decimal(10,2) unsigned not null default '0.00' comment '市场价',
+       `shop_price` decimal(10,2) unsigned not null default '0.00' comment '本店价',
+       `cost_price` decimal(10,2) unsigned not null default '0.00' comment '成本价',
+       `price_ladder` text comment '价格阶梯',
+       `keywords` varchar(255) not null default '' COMMENT '商品关键词',
+       `goods_brief`  varchar(255) not null default '' COMMENT '商品简单描述',
+       `goods_desc` text COMMENT '商品详细描述',
+       `mobile_desc` text COMMENT '手机端商品详细描述',
+       `original_img` varchar(150) not null default '' comment '商品上传原始图',
+       `is_virtual` tinyint unsigned not null default 0 COMMENT '是否是虚拟商品 1是, 0否',
+       `virtual_indate` int default 0 COMMENT '虚拟商品有效期',
+       `virtual_limit` smallint unsigned not null default 0 comment '虚拟商品购买上限',
+       `virtual_refund` tinyint unsigned not null default 1 COMMENT '是否允许过期退款 1是, 0否',
+       `virtual_sales_sum` mediumint unsigned not null default 0 comment '虚拟销售量',
+       `virtual_collect_sum` mediumint unsigned not null default 0 comment '虚拟收藏量',
+       `collect_sum` mediumint unsigned not null default 0 comment '收藏量',
+       `is_on_sale` tinyint unsigned not null default 1 COMMENT '是否上架',
+       `is_shipping` tinyint unsigned not null default 0 COMMENT '是否包邮 1是, 0否',
+       `sort_order` smallint unsigned not null default 50 comment '商品排序',
+       `is_recommend` tinyint unsigned not null default 0 COMMENT '是否推荐',
+       `is_new` tinyint unsigned not null default 1 COMMENT '是否新品',
+       `is_hot` tinyint unsigned not null default 0 COMMENT '是否热卖',
+       `goods_type` smallint unsigned not null default 0 comment '商品所属类型id',
+       `give_integral` mediumint unsigned not null default 0 comment '购买商品赠送积分',
+       `exchange_integral` int not null default 0 comment '积分兑换, 0不参与积分兑换',
+       `suppliers_id` smallint unsigned not null default 0 comment '供货商id',
+       `sales_sum` int unsigned not null default 0 comment '商品销量',
+       `prom_type` tinyint unsigned not null default 0 comment '活动类型, 0默认, 1抢购, 2团购, 3优惠促销, 4预售, 5虚拟, 6拼团, 7搭配购',
+       `prom_id` mediumint unsigned not null default 0 comment '优惠活动id',
+       `commission` decimal(5,2) default 0.00 comment '佣金用于分销分成',
+       `spu` varchar(255) not null default '' comment 'spu标准化单元',
+       `sku` varchar(255) not null default '' comment 'spu库存量单位',
+       `template_id` smallint unsigned not null default 0 comment '运费模板id',
+       `create_time` int unsigned not null default 0 COMMENT '更新时间',
+       `update_time` int unsigned not null default 0 COMMENT '更新时间',
+       `video` varchar(150) not null default '' comment '视频',
+       PRIMARY KEY(`goods_id`),
+       KEY `goods_sn`(`goods_sn`),
+       KEY `cat_id`(`cat_id`),
+       KEY `last_update`(`update_time`),
+       KEY `brand_id`(`brand_id`),
+       KEY `goods_number`(`store_count`),
+       KEY `goods_weight`(`weight`),
+       KEY `sort_order`(`sort_order`)
+)engine=MyISAM default charset=utf8;
+
+
+#创建商品与属性的关联表
+DROP TABLE IF EXISTS newshop03_goods_attr;
+CREATE TABLE newshop03_goods_attr(
+    `goods_attr_id` mediumint unsigned not null auto_increment comment '商品属性关联表id',
+    `goods_id` mediumint unsigned not null default 0 comment '商品id',
+    `attr_id` mediumint unsigned not null default 0 comment '属性id',
+    `attr_value` varchar(150) not null default '' comment '属性值',
+    `attr_price` varchar(50) not null default '' comment '属性价格',
+    PRIMARY KEY(`goods_attr_id`),
+    KEY `goods_id`(`goods_id`),
+    KEY `attr_id`(`attr_id`)
+)engine=MyISAM default charset=utf8;
+
+
+#创建商品相册表
+DROP TABLE IF EXISTS newshop03_goods_image;
+CREATE TABLE newshop03_goods_image(
+     `img_id` mediumint unsigned not null auto_increment comment '商品相册id',
+     `goods_id` mediumint unsigned not null default 0 comment '商品id',
+     `image_url` varchar(150) not null default '' comment '图片地址',
+     PRIMARY KEY(`img_id`)
+)engine=MyISAM default charset=utf8;
+
+
+#创建商品规格图片表
+DROP TABLE IF EXISTS newshop03_spec_image;
+CREATE TABLE newshop03_spec_image(
+      `spec_image_id` mediumint unsigned not null default 0 comment '对应的规格项id',
+      `goods_id` mediumint unsigned not null default 0 comment '商品id',
+      `src` varchar(150) not null default '' comment '图片地址'
+)engine=MyISAM default charset=utf8;
+
+
+#创建商品规格关联表
+DROP TABLE IF EXISTS newshop03_spec_goods_price;
+CREATE TABLE newshop03_spec_goods_price(
+    `item_id` mediumint unsigned not null auto_increment comment '商品规格关联id',
+    `goods_id` mediumint unsigned not null default 0 comment '商品id',
+    `key` varchar(32) not null default '' comment '规格键名',
+    `key_name` varchar(64) not null default '' comment '规格键名中文',
+    `price` decimal(10,2) unsigned not null default 0.00 comment '价格',
+    `cost_price` decimal(10,2) unsigned not null default 0.00 comment '成本价',
+    `commission` decimal(10,2) unsigned not null default 0.00 comment '佣金',
+    `store_count` mediumint unsigned not null default 0 comment '库存数量',
+    `sku` varchar(150) not null default '' comment 'sku',
+    `spec_img` varchar(150) comment '规格图片',
+    `prom_id` smallint default 0 comment '活动id',
+    `prom_type` tinyint default 0 comment '活动类型',
+    PRIMARY KEY(`item_id`),
+    KEY `key`(`key`)
+)engine=MyISAM default charset=utf8;
+
+
 #创建商模型表
 DROP TABLE IF EXISTS newshop03_goods_type;
 CREATE TABLE newshop03_goods_type(

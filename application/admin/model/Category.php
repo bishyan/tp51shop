@@ -129,4 +129,22 @@ class Category extends Model
         return $tree;
     }
 
+
+    public function getSortCategory()
+    {
+        $cat_list = Db::name('category')->column('cat_id, cat_name, parent_id, level');
+
+        $name_list = [];
+        foreach($cat_list as $k=>$v) {
+            $name = getFirstCharter($v['cat_name']) . ' ' . $v['cat_name'];
+            $name_list[] = $v['cat_name'] = $name;
+            $cat_list[$k] = $v;
+        }
+
+        array_multisort($name_list, SORT_ASC,SORT_STRING, $cat_list);
+        return $cat_list;
+    }
+
+
+
 }

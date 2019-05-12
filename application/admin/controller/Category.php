@@ -187,6 +187,7 @@ class Category extends Base
         }
     }
 
+
     public function getCategory(){
         $parent_id = input('get.parent_id');
         $list = Db::name('category')->where('parent_id', $parent_id)->field('cat_id, cat_name')->select();

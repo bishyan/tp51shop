@@ -10,7 +10,7 @@ class Page extends Paginator
     //首页
     protected function home() {
         if($this->currentPage() >1) {
-            return "<a href='".$this->url(1)."' title='首页'>首页</a>";
+            return "<a href='".$this->url(1)."' data-page='1' title='首页'>首页</a>";
         } else {
             //return "<p>首页</p>";
         }
@@ -21,7 +21,7 @@ class Page extends Paginator
     {
 
         if ($this->currentPage() > 1) {
-            return "<a href='" . $this->url($this->currentPage - 1) . "' title='上一页'><上一页</a>" ;
+            return "<a href='" . $this->url($this->currentPage - 1) . "' data-page='".($this->currentPage-1)."' title='上一页'><上一页</a>" ;
         } else {
             //return "<p>上一页</p>";
         }
@@ -31,7 +31,7 @@ class Page extends Paginator
     protected function next()
     {
         if ($this->hasMore) {
-            return "<a href='" . $this->url($this->currentPage + 1) . "' title='下一页'>下一页></a>" ;
+            return "<a href='" . $this->url($this->currentPage + 1) . "' data-page='".($this->currentPage+1)."' title='下一页'>下一页></a>" ;
         } else {
             //return "<p>下一页</p>";
         }
@@ -40,7 +40,7 @@ class Page extends Paginator
     //尾页
     protected function last() {
         if($this->hasMore) {
-            return "<a href='".$this->url($this->lastPage)."' title='尾页'>尾页</a>";
+            return "<a href='".$this->url($this->lastPage)."' data-page='".$this->lastPage."' title='尾页'>尾页</a>";
         } else {
             //return "<p>尾页</p>";
         }
@@ -158,7 +158,7 @@ class Page extends Paginator
      */
     protected function getAvailablePageWrapper($url, $page)
     {
-        return '<a href="' . htmlentities($url) . '" title="第"' . $page .'"页" >' . $page . '</a>';
+        return '<a href="' . htmlentities($url) . '" data-page="'.$page.'" title="第' . $page .'页" >' . $page . '</a>';
     }
 
     /**
@@ -180,7 +180,7 @@ class Page extends Paginator
      */
     protected function getActivePageWrapper($text)
     {
-        return '<a href="" class="cur">' . $text . '</a>';
+        return '<a href="" class="cur" data-page="'.$text.'">' . $text . '</a>';
     }
 
     /**
