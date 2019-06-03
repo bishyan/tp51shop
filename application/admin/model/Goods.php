@@ -7,6 +7,7 @@
  */
 
 namespace app\admin\model;
+use think\facade\Cache;
 use think\Model;
 use think\Db;
 
@@ -15,6 +16,26 @@ class Goods extends Model
     protected $autoWriteTimestamp = true;
     protected $pk = 'goods_id';
     protected $field = [];
+
+    public function specImage()
+    {
+        return $this->hasMany('spec_image', 'goods_id',  'goods_id');
+    }
+
+    public function specGoodsPrice()
+    {
+        return $this->hasMany('spec_goods_price', 'goods_id',  'goods_id');
+    }
+
+    public function goodsImages()
+    {
+        return $this->hasMany('goods_image', 'goods_id', 'goods_id')->order('img_id desc');
+    }
+
+    public function goodsCategory()
+    {
+        return $this->hasOne('category', 'cat_id', 'cat_id');
+    }
 
     public function GoodsBrand()
     {
@@ -93,10 +114,11 @@ class Goods extends Model
         } else {
             // 处理商品货号
             $this->handleGoodsSn($goods_id);
-            // 处理商品原图
-            $this->handleGoodsOriginalImage($goods_id);
+
             // 商品相册
             $this->handleGoodsImages($goods_id);
+            // 处理商品原图
+            $this->handleGoodsOriginalImage($goods_id);
             // 商品规格图片
             $this->handleGoodsSpecImages($goods_id);
             // 商品规格
@@ -160,7 +182,7 @@ class Goods extends Model
         $has_num = Db::name('goods_image')->where(['goods_id'=>$goods_id, 'image_url'=>$original_image])->count();
 
         if ($has_num == 0 && $original_image != '' && file_exists(app()->getRootPath() . 'public' . $original_image)) {
-            Db::name('goods_image')->insert(['goods_id'=>$goods_id, 'image_url'=>$original_image]);
+            $res = Db::name('goods_image')->insert(['goods_id'=>$goods_id, 'image_url'=>$original_image]);
         }
     }
 
@@ -257,6 +279,32 @@ class Goods extends Model
         }
     }
 
+    /**
+     * 获取商品规格
+     * @param $value
+     * @param $data
+     */
+    public function getSpecAttr($value, $data)
+    {
+        $spec_goods_price_key = Db::name('spec_goods_price')->where('goods_id', $data['goods_id'])->value("GROUP_CONCAT(`key` SEPARATOR '_')");
+        //dump($spec_goods_price_key);exit;
+        if ($spec_goods_price_key) {
+            $spec_goods_price_key_arr = array_unique(explode('_', $spec_goods_price_key));
+            // 规格项列表
+            $spec_item_list = Db::name('spec_item')->whereIn('id', $spec_goods_price_key_arr)->order('sort_order')->select();
+            $spec_ids = array_unique(array_column($spec_item_list, 'spec_id'));
+            // 规格列表
+            $spec_list = Db::name('spec')->whereIn('spec_id', $spec_ids)->column('*');
+            foreach($spec_item_list as $key=>$value) {
+                $spec_list[$value['spec_id']]['spec_item'][] = $value;
+            }
+            //dump($spec_list);
+            return $spec_list;
+        } else {
+            return [];
+        }
+    }
+
     public function setCatIdAttr($value, $data) {
         if (isset($data['cat_id_3']) && $data['cat_id_3'] > 0) {
             return $data['cat_id_3'];
@@ -301,6 +349,5 @@ class Goods extends Model
             return json_decode($value, true);
         }
     }
-
 
 }

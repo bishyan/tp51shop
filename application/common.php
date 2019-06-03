@@ -16,6 +16,14 @@ function encrypt($str) {
     return md5(config('MD5_CODE') . $str);
 }
 
+function getSubstr($string, $start, $length)
+{
+    if (mb_strlen($string, 'utf-8') > $length) {
+        return mb_substr($string, $start, $length) . '...';
+    } else {
+        return $string;
+    }
+}
 
 //function saveDataToTable($data, $table_name, $id_name) {
 //    if (isset($data[$id_name])) {
@@ -95,12 +103,106 @@ function getFirstCharter($str){
 }
 
 
+function ajaxReturn($value) {
+    exit(json_encode($value));
+}
+
+/**
+ * 获取商品的缩略图
+ * @param $goods_id
+ * @param $width
+ * @param $height
+ * @param int $item_id
+ * @return mixed|string
+ */
+function goods_thumb_image($goods_id, $width, $height, $item_id=0)
+{
+    if (empty($goods_id)) {
+        return '';
+    }
+
+    $path = getcwd() . "/upload/goods/thumb/{$goods_id}/";
+    //dump($path);
+    $thumb_name = "goods_thumb_{$goods_id}_{$item_id}_{$width}_{$height}";
+    $exts = ['.jpg', '.jpeg', '.gif', '.png'];
+    foreach($exts as $ext) {
+        if (is_file($path . $thumb_name . $ext)) {
+            return  "/upload/goods/thumb/{$goods_id}/" . $thumb_name . $ext;
+        }
+    }
+
+    $original_img = '';
+    if ($item_id) {
+        //$original_img = Db::name('spec_goods_price')->where(['goods_id'=>$goods_id, 'item_id'=>$item_id])->cache(true, 30, 'original_img_cache')->value('spec_img');
+        $original_img = Db::name('spec_goods_price')->where(['goods_id'=>$goods_id, 'item_id'=>$item_id])->value('spec_img');
+    } else {
+        //$original_img = Db::name('goods')->where('goods_id', $goods_id)->cache(true, 30, 'original_img_cache')->value('original_img');
+        $original_img = Db::name('goods')->where('goods_id', $goods_id)->value('original_img');
+    }
+
+    if (empty($original_img)) {
+        return '/images/icon_goods_thumb_empty_300.png';
+    } else {
+        if (!is_file(getcwd() . $original_img)) {
+            return '/images/icon_goods_thumb_empty_300.png';
+        }
+
+        try{
+            $image = \think\Image::open(getcwd() . $original_img);
+            $thumb_name = $thumb_name . '.' . $image->type();
+            // 生成缩略图
+            if (!is_dir($path)) {
+                mkdir($path, 0755, true);
+            }
+            $image->thumb($width, $height, 2)->save($path . $thumb_name, null, 100);
+
+            return "/upload/goods/thumb/{$goods_id}/" . $thumb_name;
+        } catch (think\Exception $e) {
+
+            return $original_img;
+        }
+    }
+}
+
+/**
+ *  获取商品相册缩略图
+ */
+function get_pic_thumb_images($pic_image, $goods_id, $width, $height)
+{
+    $path = getcwd() . "/upload/goods/thumb/{$goods_id}/";
+    //dump($path);
+    $thumb_name = "goods_pic_thumb_{$pic_image['img_id']}_{$width}_{$height}";
+    $exts = ['.jpg', '.jpeg', '.gif', '.png'];
+    foreach($exts as $ext) {
+        if (is_file($path . $thumb_name . $ext)) {
+            return  "/upload/goods/thumb/{$goods_id}/" . $thumb_name . $ext;
+        }
+    }
+
+    $original_img = getcwd() . $pic_image['image_url'];
+    if (!is_file($original_img)) {
+        return '/images/icon_goods_thumb_empty_300.png';
+    } else {
+        try {
+            $image = \think\Image::open($original_img);
+            $thumb_name = $thumb_name . '.' . $image->type();
+            $image->thumb($width, $height, 2)->save($path.$thumb_name, null, 100);
+
+            return "/upload/goods/thumb/{$goods_id}/" . $thumb_name;
+        }catch(think\Exception $e) {
+            return $original_img;
+        }
+
+    }
+}
+
+
 /**
  * 递归删除文件
  * @param $path
  * @return bool
  */
-function delFile($path) {
+function delFile($path, $del_dir = false) {
 
     if(!is_dir($path)) {
         return false;
@@ -109,17 +211,16 @@ function delFile($path) {
     $handle = opendir($path);
 
     while(false !== ($row = readdir($handle))) {
+
         if ($row != '.' && $row != '..') {
-            if (is_dir($path . '/' . $row)) {
-                delFile($path .'/'.$row);
-            } else {
-                unlink($path . '/' . $row);
-            }
+            is_dir($path . '/' . $row)? delFile($path .'/'.$row, true) : unlink($path . '/' . $row);
         }
     }
-
-    //$res = rmdir($path);
     closedir($handle);
+
+    if ($del_dir) {
+        return rmdir($path);
+    }
 
     return true;
 }

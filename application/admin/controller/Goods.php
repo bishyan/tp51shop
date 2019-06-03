@@ -58,7 +58,7 @@ class Goods extends Base
             // 获取选中的分类
             $selected_cat = $this->app->model('GoodsLogic', 'logic')->find_parent_cat($goods_info['cat_id']);
             // 商品相册
-            $goods_images = Db::name('goods_image')->where('goods_id', $goods_info['goods_id'])->select();
+            $goods_images = Db::name('goods_image')->where('goods_id', $goods_info['goods_id'])->order('img_id desc')->select();
 
             $this->assign('goods_images', $goods_images);
             $this->assign('selected_cat', $selected_cat);

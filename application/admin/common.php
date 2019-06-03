@@ -62,9 +62,7 @@ function cartesian_product_array($arr1, $arr2)
 
 
 
-function ajaxReturn($value) {
-    exit(json_encode($value));
-}
+
 
 /** 获取当前管理员菜单
  * @return array

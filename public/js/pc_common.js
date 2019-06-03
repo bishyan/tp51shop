@@ -101,11 +101,11 @@ function collect_goods(goods_id){
  function pop_login(){
 	 layer.open({
 		 type: 2,
-		 title: '<b>登陆TPshop网</b>',
+		 title: '<b>用户登陆</b>',
 		 skin: 'layui-layer-rim',
 		 shadeClose: true,
 		 shade: 0.5,
 		 area: ['490px', '460px'],
-		 content: "/index.php?m=Home&c=User&a=pop_login",
+		 content: "/index/User/pop_login",
 	 });
  }

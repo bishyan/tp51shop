@@ -15,6 +15,20 @@ class Category extends Model
     protected $pk = 'cat_id';
     protected $field = ['cat_name', 'mobile_name', 'parent_id', 'is_show', 'cat_group', 'sort_order', 'commission_rate'];
 
+    public function getParentListAttr($value, $data)
+    {
+        $parent_ids = explode('_', $data['parent_id_path']);
+        //array_pop($parent_ids);
+        array_shift($parent_ids);
+        if (count($parent_ids) > 0) {
+            $parent_list = Db::name('category')->whereIn('cat_id', $parent_ids)->select();
+
+            return empty($parent_list)? [] : $parent_list;
+        } else {
+            return [];
+        }
+    }
+
 
     public function saveData($data, $cat_id=0)
     {

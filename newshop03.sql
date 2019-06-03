@@ -1,3 +1,104 @@
+#创建用户表
+DROP TABLE IF EXISTS newshop03_users;
+
+CREATE TABLE newshop03_users (
+  `user_id` mediumint unsigned not null auto_increment comment '用户表id',
+  `email` varchar(64) not null default '' comment 'email',
+  `password` char(32) not null comment '密码',
+  `paypwd` char(32) not null comment '支付密码',
+  `sex` tinyint unsigned not null default 0 comment '性别 0保密 1男 2女',
+  `birthday` int unsigned not null default 0 comment '生日',
+  `user_money` decimal(10,2) not null default '0.00' comment '用户金额',
+  `frozen_money` decimal(10,2) not null default '0.00' comment '冻结金额',
+  `distribute_money` decimal(10,2) not null default '0.00' comment '累积分佣金额',
+  `underline_number` mediumint not null default 0 comment '用户下线总数',
+  `pay_points` int unsigned not null default 0 comment '消费积分',
+  `address_id` mediumint unsigned not null default 0 comment '默认收货地址',
+  `reg_time` int unsigned not null default 0 comment '注册时间',
+  `last_login` int unsigned not null default 0 comment '最后登陆时间',
+  `last_ip` varchar(15) not null default '' comment '最后登陆ip',
+  `qq` varchar(20) not null default '' comment 'QQ',
+  `mobile` varchar(15) not null default '' comment '手机号码',
+  `mobile_validated` tinyint unsigned not null default 0 comment '是否验证手机',
+  `oauth` varchar(10) not null default '' comment '第三方来源 wx weibo alipay',
+  `openid` varchar(100) not null default '' comment '第三方唯一标示',
+  `unionid` varchar(100) not null default '' comment '联合登陆id',
+  `head_pic` varchar(150) not null default '' comment '头像',
+  `province` int unsigned not null default 0 comment '省份',
+  `city` int unsigned not null default 0 comment '市区',
+  `district` int unsigned not null default 0 comment '县',
+  `email_validated` tinyint unsigned not null default 0 comment '是否验证email',
+  `nickname` varchar(50) not null default '' comment '第三方返回昵称',
+  `level` tinyint unsigned not null default 1 comment '会员等级',
+  `discount` decimal(10,2) not null default '1.00' comment '会员折扣, 默认1不享受',
+  `total_amount` decimal(10,2) not null default '0.00' comment '消费累计额度',
+  `is_lock` tinyint unsigned not null default 0 comment '是否被锁定冻结',
+  `is_distribute` tinyint unsigned not null default 0 comment '是否为分销商 0否 1是',
+  `first_leader` int unsigned not null default 0 comment '第一个上级',
+  `second_leader` int unsigned not null default 0 comment '第二个上级',
+  `third_leader` int unsigned not null default 0 comment '第三个上级',
+  `token` varchar(64) not null default '' comment '用于app 授权类似于session_id',
+  `message_mask` tinyint unsigned not null default '63' comment '消息掩码',
+  `push_id` varchar(32) not null default '' comment '推送id',
+  `distribute_level` tinyint unsigned not null default '0' comment '分销商等级',
+  `is_vip` tinyint unsigned not null default '0' comment '是否为vip 0不是 1是',
+  `xcx_qrcode` varchar(150) not null default '' comment '小程序专属二维码',
+  `poster` varchar(150) not null default '' comment '专属推广海报',
+  PRIMARY KEY (`user_id`),
+  KEY `email`(`email`),
+  KEY `underline_number`(`underline_number`),
+  KEY `mobile`(`mobile`),
+  KEY `openid`(`openid`),
+  KEY `unionid`(`unionid`)
+) charset=utf8;
+
+insert  into `newshop03_users`(`user_id`,`email`,`password`,`paypwd`,`sex`,`birthday`,`user_money`,`frozen_money`,`distribute_money`,`underline_number`,`pay_points`,`address_id`,`reg_time`,`last_login`,`last_ip`,`qq`,`mobile`,`mobile_validated`,`oauth`,`openid`,`unionid`,`head_pic`,`province`,`city`,`district`,`email_validated`,`nickname`,`level`,`discount`,`total_amount`,`is_lock`,`is_distribute`,`first_leader`,`second_leader`,`third_leader`,`token`,`message_mask`,`push_id`,`distribut_level`,`is_vip`,`xcx_qrcode`,`poster`) values (1,'13800138000@163.com',md5('123456'),md5('123456'),0,-28800,100000.00,0.00,0.00,0,100000,0,1523235674,1523235674,'','','',0,'','','','/public/upload/user/1/head_pic/1673d08c39ff9d1103611a7585a8ae0f.jpg',0,0,0,1,'13800138000@163.com',4,0.94,4939.90,0,0,0,0,0,'81953a80817fdf7c25e682ca3311abc9',63,'0',0,0,'','');
+
+# 创建购物车表
+DROP TABLE IF EXISTS `newshow03_cart`;
+
+CREATE TABLE `newshop03_cart` (
+  `cart_id` int unsigned NOT NULL auto_increment comment '购物车id',
+  `user_id` mediumint unsigned NOT NULL DEFAULT '0' COMMENT '用户id',
+  `session_id` char(128) NOT NULL DEFAULT '' COMMENT 'SESSION',
+  `goods_id` mediumint unsigned NOT NULL DEFAULT '0' comment '商品id',
+  `goods_sn` varchar(60) NOT NULL DEFAULT '' COMMENT '商品货号',
+  `goods_name` varchar(120) NOT NULL DEFAULT '' COMMENT '商品名称',
+  `market_parice` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '市场价',
+  `goods_parice` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '本店价',
+  `member_goods_parice` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '会员折扣价',
+  `goods_num` smallint unsigned NOT NULL DEFAULT 0 COMMENT '购买数量',
+  `item_id` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '规格id',
+  `spec_key` varchar(64) NOT NULL DEFAULT '' COMMENT '商品规格key, 对应spec_goods_price表的key',
+  `spec_key_name` varchar(64) NOT NULL DEFAULT '' COMMENT '商品规格组合名称',
+  `bar_code` varchar(64) NOT NULL DEFAULT '' COMMENT '商品条码',
+  `selected` tinyint unsigned not null default 1 comment '购物车选中状态',
+  `add_time` int unsigned not null default 0 comment '加入购物车的时间',
+  `prom_type` tinyint unsigned not null default 0 comment '0普通订单, 1限时抢购, 2团购, 3促销优惠, 7搭配购',
+  `prom_id` int unsigned not null DEFAULT '0' comment '活动id',
+  `sku` varchar(128) not null default '' comment 'sku',
+  `combination_group_id` int unsigned NOT NULL DEFAULT 0 COMMENT '搭配购的组id/cart_id',
+  PRIMARY KEY (`cart_id`),
+  KEY `session_id`(`session_id`),
+  KEY `user_id`(`user_id`),
+  KEY `goods_id`(`goods_id`),
+  KEY `spec_key`(`spec_key`)
+) charset=utf8;
+
+
+# 创建用户等级表
+DROP TABLE IF EXISTS `newshop03_user_level`;
+CREATE TABLE `newshop03_user_level` (
+    `level_id` smallint unsigned NOT NULL AUTO_INCREMENT COMMENT '用户等级表id',
+    `level_name` varchar(32) default '' COMMENT '等级名称',
+    `amount` decimal(10,2) DEFAULT '0.00' COMMENT '等级必要的金额',
+    `discount` smallint unsigned not null default 0 comment '折扣',
+    `describe` varchar(200) not null default '' comment '描述',
+    PRIMARY KEY(`level_id`)
+) engine=MyISAM charset=utf8;
+
+insert  into `newshop3_user_level`(`level_id`,`level_name`,`amount`,`discount`,`describe`) values (1,'倔强青铜',0.00,100,'若如初相见，若如初相恋'),(2,'秩序白银',1000.00,99,''),(3,'荣耀黄金',3000.00,94,''),(4,'尊贵铂金',10000.00,95,''),(5,'永恒钻石',50000.00,93,''),(6,'至尊星耀',100000.00,91,''),(7,'最强王者',3000000.00,90,'');
+
 #创建商品表
 DROP TABLE IF EXISTS newshop03_goods;
 CREATE TABLE newshop03_goods(
@@ -201,7 +302,7 @@ CREATE TABLE newshop03_category(
   KEY `parent_id` (`parent_id`)
 )engine=MyISAM default charset = utf8;
 
-====================  RBAC ===============================
+######################## RBAC ###########################
 # 创建权限表
 drop table if exists newshop03_system_menu;
 
@@ -255,3 +356,4 @@ CREATE TABLE newshop03_admin(
   `update_time` int not null default 0 comment '更新时间',
   PRIMARY KEY (`admin_id`)
 ) engine = MyISAM default charset = utf8;
+

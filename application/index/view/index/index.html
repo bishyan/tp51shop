@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>首页-开源商城 | B2C商城 | B2B2C商城 | 三级分销 | 免费商城 | 多用户商城 | tpshop｜thinkphp shop｜TPshop 免费开源系统 | 微商城</title>
+    <meta name="keywords" content="开源商城 B2C商城  B2B2C商城  三级分销  多用户商城  免费商城  微商城"/>
+    <meta name="description" content="TPshop 开源商城 tpshop thinkphp shop B2C商城 B2B2C商城 三级分销 免费商城  微商城 多用户商城 免费开源系统"/>
+    <link rel="stylesheet" type="text/css" href="/static/index/css/base.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/index/css/index.css"/>
+    <script src="/static/index/js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/js/global.js"></script>
+    <link rel="shortcut icon" type="image/x-icon" href="/upload/logo/2018/04-09/516bc70315079d81dc3726991672b4af.png" media="screen"/>
+</head>
+<body class="gray_f5">
+<!--header-s-->
+{include file="public/header" /}
+
+<!--header-e-->
+<div id="myCarousel" class="carousel clearfix">
+    <ul class="carousel-inner">
+        <li class="item" style="background:#ff8000;">
+            <a class="item-pic" href="javascript:void(0);" >
+                <img class="w-100" src="/upload/ad/2018/04-25/93bf5c1ebdf4c4359253a107bcbdbe98.jpg" title="" alt=""></a>
+        </li>
+        <li class="item" style="background:#fea8c1;">
+            <a class="item-pic" href="javascript:void(0);" >
+                <img class="w-100" src="/upload/ad/2018/04-13/6eeaa63e76c946927d0c1e67f6cf4f4f.jpg" title="" alt=""></a>
+        </li>
+        <li class="item" style="background:#f1e6d2;">
+            <a class="item-pic" href="javascript:void(0);" >
+                <img class="w-100" src="/upload/ad/2018/04-13/8099744a886c2cfad7c837e28aee9d52.jpg" title="" alt=""></a>
+        </li>
+        <li class="item" style="background:#f1dcf7;">
+            <a class="item-pic" href="javascript:void(0);" >
+                <img class="w-100" src="/upload/ad/2018/04-13/7009c820b93bcf31d3e42df31d78ed71.jpg" title="" alt=""></a>
+        </li>
+        <li class="item" style="background:#000000;">
+            <a class="item-pic" href="javascript:void(0);" >
+                <img class="w-100" src="/upload/ad/2018/04-24/44aa330b056f5b090b6d6ac8a9a072dd.jpg" title="" alt=""></a>
+        </li>
+    </ul>
+    <div class="pagination">
+
+    </div>
+    <a class="carousel-control left-btn t-all" href="javascript:;" data-slide="prev"></a>
+    <a class="carousel-control right-btn t-all" href="javascript:;" data-slide="next"></a>
+    <script>
+        $(function() {
+            function banner() {
+                var windowWidth=$(window).width();  //获取轮播图的宽度（这里是全屏）
+                window.onresize=function(){  //屏幕大小改变时 自适应
+                    windowWidth=$(window).width();
+                    $_banner.css({'width':windowWidth*(length+2),left:-windowWidth});
+                    $_banner.find('.item').css('width',windowWidth);
+                };
+                var $_bannerWrap=$('#myCarousel');
+                var $_banner=$_bannerWrap.find('.carousel-inner');
+                var length=$_banner.find('.item').length;
+                var first=$_banner.find('.item').eq(0).clone();
+                var last=$_banner.find('.item:last').clone();
+                var timer; //定时器
+                $_banner.append(first);
+                $_banner.prepend(last);
+                //初始化 轮播图列表宽度和列表项宽度
+                $_banner.css({'width':windowWidth*(length+2),left:-windowWidth});
+                $_banner.find('.item').css('width',windowWidth);
+
+                var $_pagination=$_bannerWrap.find('.pagination');
+                for(var i=0;i<length;i++){  //自动增加白色索引点击点
+                    $_pagination.append('<span class="pagination-item"></span>');
+                }
+                var iNow=1; //索引记录标志
+                hoverActive(iNow); //初始化状态标记
+                $_bannerWrap.find('.left-btn').click(function () {
+                    clearInterval(timer);
+                    iNow--;
+                    bannerRun();
+                });
+                $_bannerWrap.find('.right-btn').click(function () {
+                    clearInterval(timer);
+                    iNow++;
+                    bannerRun();
+                });
+                $_pagination.find('.pagination-item').click(function () {
+                    iNow=$(this).index()+1;
+                    $_banner.finish().animate({left:-iNow*windowWidth},500);
+                    hoverActive(iNow);
+                });
+                function bannerAutoRun(){  //轮播图自动循环播放 间隔4秒
+                    timer=setInterval(function() {
+                        iNow++;
+                        bannerRun();
+                    },4000)
+                }
+                bannerAutoRun();
+
+                //移动上面去停止，移动出来继续轮播
+                function hoverChangeRun(ele){
+                    ele.hover(function(){
+                        clearInterval(timer);
+                    },function () {
+                        bannerAutoRun();
+                    });
+                }
+                hoverChangeRun($_banner.find('.item-pic'));
+                hoverChangeRun($_pagination.find('.pagination-item'));
+                hoverChangeRun($_bannerWrap.find('.carousel-control'));
+
+                function hoverActive(index){ //切换时改变状态
+                    $_banner.find('.item').eq(index).addClass('slide-active').siblings().removeClass('slide-active');
+                    $_pagination.find('.pagination-item').eq(index-1).addClass('active').siblings().removeClass('active');
+                }
+                function bannerRun(){ //点击切换图片
+                    if(iNow>length){
+                        $_banner.finish().animate({left:-iNow*windowWidth},300,function(){
+                            $_banner.css({left:-1*windowWidth});
+                        });
+                        iNow=1;
+                    }else if(iNow<1){
+                        $_banner.finish().animate({left:-iNow*windowWidth},500,function(){
+                            $_banner.css({left:-length*windowWidth});
+                        });
+                        iNow=length;
+                    }else{
+                        $_banner.finish().animate({left:-iNow*windowWidth},300);
+                    }
+                    hoverActive(iNow);
+                }
+            }
+            banner();
+        })
+    </script>
+    <div class="banner-right-box">
+        <a class="banner-right-item t-all" href="javascript:void(0);"><img src="/upload/ad/2018/04-09/26c1fa2220802a0d27beee0991d8c4d1.jpg" alt="" /></a>
+        <a class="banner-right-item t-all" href="javascript:void(0);"><img src="/upload/ad/2018/04-09/8163831b208ddd86d7f12f97277b4dc4.jpg" alt="" /></a>
+    </div>
+</div>
+
+<div class="adv3 w1224 clearfix">
+    <a class="recommend-brand t-all" href="javascript:void(0);">
+        <img class="w-100" src="/upload/ad/2018/04-09/1109cd61a047c0a79b52e70669f2abe4.jpg" alt="" title=""/>
+    </a>
+    <a class="recommend-brand t-all" href="javascript:void(0);">
+        <img class="w-100" src="/upload/ad/2018/04-09/9d765b024000406a13f0f229ef9822e4.jpg" alt="" title=""/>
+    </a>
+    <a class="recommend-brand t-all" href="javascript:void(0);">
+        <img class="w-100" src="/upload/ad/2018/04-26/c1f8608955dfdc853c86c8d4679a550f.jpg" alt="" title=""/>
+    </a>
+</div>
+
+<a href="javascript:void(0);" class="adver_line">
+    <img class="w-100" src="/upload/ad/2018/07-05/4e2631e39c39b248343c27bb1897b1ba.jpg" alt=""/>
+</a>
+{foreach name="hot_cat_goods" item="v" key="k"}
+<div class="floor floor{$k} w1224">
+    <div class="floor-top">
+        <h3 class="floor-title">{$v.cat_name}</h3>
+        <div class="floor-nav-list clearfix">
+            {foreach name="$v.sub_menu" item="vv"}
+            <a class="floor-nav-item" href="{:url('/index/Goods/goodsList/cat_id/' .$vv['cat_id'])}">{$vv.cat_name}</a>
+            {/foreach}
+
+        </div>
+        <a class="nav-more-btn" href="{:url('/index/Goods/goodsList/cat_id/' .$v['cat_id'])}">更多<i>></i></a>
+    </div>
+    <div class="floor-main">
+        <div class="floor-brand">
+            <a class="brand-big" href="javascript:void(0);"><img class="w-100" src="/upload/ad/2018/04-12/3181c862e182923170dcf1e15bc0a2cc.jpg" alt="" /></a>
+            <a class="brand-samll" href="javascript:void(0);"><img class="w-100" src="/upload/ad/2018/04-12/2174905d797ce41bd4191269dae63118.jpg" alt="" /></a>
+        </div>
+        <div class="floor-goods-list">
+            {foreach name="$v['hot_goods']" item="hg"}
+            <a class="floor-goods-item" title="{$hg.goods_name}" href="{:url('/index/Goods/goodsInfo/goods_id/' .$hg['goods_id'])}">
+                <div class="googs-title ellipsis-1">{$hg.goods_name|getSubstr=0,20}</div>
+                <div class="googs-price ellipsis-1">￥ {$hg.shop_price}</div>
+                <div class="goods-pic"><img class="w-100" src="{$hg.goods_id|goods_thumb_image=400,400}" alt=""></div>
+            </a>
+            {/foreach}
+
+        </div>
+        <div class="floor-recommend">
+            <div class="floor-recommend-title">热门推荐</div>
+            <div class="floor-recommend-wrap">
+                <div class="floor-recommend-list">
+                    {foreach name="$v.recommend_goods" item="rg"}
+                    <a class="floor-recommend-item" title="{$rg.goods_name}" href="{:url('/index/Goods/goodsInfo/goods_id/' .$rg['goods_id'])}">
+                        <div class="floor-recommend-pic">
+                            <img class="w-100" src="{$rg.goods_id|goods_thumb_image=200,200}" alt="" />
+                        </div>
+                        <div class="floor-recommend-cont">
+                            <div class="recommend-goods-name ellipsis-1">{$rg.goods_name|getSubstr=0,15}</div>
+                            <div class="recommend-goods-des ellipsis-1"></div>
+                            <div class="recommend-goods-price  recommend-goods-des">￥ {$rg.shop_price}</div>
+                        </div>
+                    </a>
+                    {/foreach}
+
+
+
+                </div>
+            </div>
+            <a class="recommend-more-btn" href="/Home/Goods/goodsList/id/31.html">更多 <i>></i></a>
+        </div>
+    </div>
+</div>
+{/foreach}
+
+
+<div class="tpshop-service">
+    <ul class="w1224 clearfix">
+        <li>
+            <i class="ico ico-day7">16</i>
+            <p class="service">16天无理由退货</p>
+        </li>
+        <li>
+            <i class="ico ico-day15">15</i>
+            <p class="service">15天免费换货</p>
+        </li>
+        <li>
+            <i class="ico ico-quality"></i>
+            <p class="service">正品行货 品质保障</p>
+        </li>
+        <li>
+            <i class="ico ico-service"></i>
+            <p class="service">专业售后服务</p>
+        </li>
+    </ul>
+</div>
+<div class="footer">
+    <div class="w1224 clearfix" style="padding-bottom: 10px;">
+        <div class="left-help-list">
+            <div class="help-list-wrap clearfix">
+                <dl>
+                    <dt>新手上路</dt>
+                </dl>
+                <dl>
+                    <dt>购物指南</dt>
+                </dl>
+                <dl>
+                    <dt>售后服务</dt>
+                </dl>
+                <dl>
+                    <dt>支付方式</dt>
+                </dl>
+                <dl>
+                    <dt>配送方式</dt>
+                </dl>
+            </div>
+            <div class="friendship-links clearfix">
+                <span>友情链接 : </span>
+                <div class="links-wrap-h clearfix">
+                    <a href="https://www.taobao.com"  >淘宝网</a>
+                    <a href="https://www.jd.com"  >京东</a>
+                    <a href="https://www.vip.com"  >唯品会</a>
+                    <a href="https://www.suning.com" target="_blank" >苏宁易购</a>
+                    <a href="http://www.yhd.com"  >1号店</a>
+                    <a href="https://www.baidu.com"  >百度</a>
+                </div>
+            </div>
+        </div>
+        <div class="right-contact-us">
+            <h3 class="title">联系我们</h3>
+            <span class="phone">0744-12345678</span>
+            <p class="tips">周一至周日8:00-18:00<br />(仅收市话费)</p>
+            <!--<div class="qr-code-list clearfix">-->
+            <!--<a class="qr-code" href="javascript:;"><img class="w-100" src="/static/index/images/qrcode.png" alt="" /></a>-->
+            <!--<a class="qr-code qr-code-tpshop" href="javascript:;"><img class="w-100" src="/static/index/images/qrcode.png" alt="" /></a>-->
+            <!--</div>-->
+        </div>
+    </div>
+    <div class="mod_copyright p">
+        <div class="grid-top">
+            <!--<a href="javascript:void (0);">关于我们</a><span>|</span>-->
+            <!--<a href="javascript:void (0);">联系我们</a><span>|</span>-->
+            <!---->
+        </div>
+        <p>Copyright © 2016-2025 TPshop开源商城 版权所有 保留一切权利 备案号:<a href="http://www.miitbeian.gov.cn" >粤ICP备123456号</a></p>
+        <p class="mod_copyright_auth">
+            <a class="mod_copyright_auth_ico mod_copyright_auth_ico_1" href="" target="_blank">经营性网站备案中心</a>
+            <a class="mod_copyright_auth_ico mod_copyright_auth_ico_2" href="" target="_blank">可信网站信用评估</a>
+            <a class="mod_copyright_auth_ico mod_copyright_auth_ico_3" href="" target="_blank">网络警察提醒你</a>
+            <a class="mod_copyright_auth_ico mod_copyright_auth_ico_4" href="" target="_blank">诚信网站</a>
+            <a class="mod_copyright_auth_ico mod_copyright_auth_ico_5" href="" target="_blank">中国互联网举报中心</a>
+        </p>
+    </div>
+</div>
+<style>
+    .mod_copyright {
+        border-top: 1px solid #EEEEEE;
+    }
+    .grid-top {
+        margin-top: 20px;
+        text-align: center;
+    }
+    .grid-top span {
+        margin: 0 10px;
+        color: #ccc;
+    }
+    .mod_copyright > p {
+        margin-top: 10px;
+        color: #666;
+        text-align: center;
+    }
+    .mod_copyright_auth_ico {
+        overflow: hidden;
+        display: inline-block;
+        margin: 0 3px;
+        width: 103px;
+        height: 32px;
+        background-image: url(/static/index/images/ico_footer.png);
+        line-height: 1000px;
+    }
+    .mod_copyright_auth_ico_1 {
+        background-position: 0 -151px;
+    }
+    .mod_copyright_auth_ico_2 {
+        background-position: -104px -151px;
+    }
+    .mod_copyright_auth_ico_3 {
+        background-position: 0 -184px;
+    }
+    .mod_copyright_auth_ico_4 {
+        background-position: -104px -184px;
+    }
+    .mod_copyright_auth_ico_5 {
+        background-position: 0 -217px;
+    }
+</style>
+<script>
+    // 延时加载二维码图片
+    jQuery(function($) {
+        $('img[img-url]').each(function() {
+            var _this = $(this),
+                url = _this.attr('img-url');
+            _this.attr('src',url);
+        });
+    });
+</script>
+
+<!--楼层导航-s-->
+<ul class="floor-nav" id="floor-nav">
+    {foreach name="$hot_cat_goods" item="nav"}
+    <li>
+        <span>{$key+1}F</span>
+        <span>{$nav.cat_name}</span>
+    </li>
+    {/foreach}
+
+</ul>
+
+<!--楼层导航-e-->
+<!--侧边栏-s-->
+<div class="slidebar-right">
+    <a class="slidebar-item ico-slidebar1" target="_blank" href="tencent://message/?uin=123456789&amp;Site=TPshop商城&amp;Menu=yes" >
+        <div class="sbar-hover-txt">客服服务</div>
+    </a>
+    <a class="slidebar-item ico-slidebar2" target="_blank" href="javascript:;" >
+        <div class="sbar-hover-txt">关注微信</div>
+        <div class="sbar-hover-pic">
+            <div class="qrcode-wrap"><img class="w-100" src="/static/index/images/qrcode.png" alt="" /></div>
+            <p class="qrcode-des">扫码关注官方微信,先人一步知晓促销活动</p>
+        </div>
+    </a>
+    <a class="slidebar-item ico-slidebar3" target="_blank" href="javascript:;" >
+        <div class="sbar-hover-txt">手机商城</div>
+        <div class="sbar-hover-pic">
+            <div class="qrcode-wrap"><img class="w-100" img-url="/index.php?m=Home&c=Index&a=qr_code&data=http://tpshop3.gg/Mobile/index/app_down.html&head_pic=http://tpshop3.gg//static/images/logo/pc_home_logo_default.png&back_img=" alt="" /></div>
+            <p class="qrcode-des">扫码下载手机商城,随时随地享受优惠购物</p>
+        </div>
+    </a>
+    <a class="slidebar-item ico-slidebar4 t-all" href="javascript:;" >
+        <div class="sbar-hover-txt">回到顶部</div>
+    </a>
+</div>
+<script>
+
+    function init(){  //初始化函数
+        //首页商品分类显示
+        $('.categorys .dd').show();
+
+        //自动楼层居中设置
+        $('#floor-nav').css('margin-top',(-41*$('#floor-nav').find('li').length+1)/2);
+
+        //推荐列表自动滚动
+        carouselList('.floor-recommend-wrap','.floor-recommend-list','.floor-recommend-item');
+
+        //右侧边栏
+        rightBar();
+
+        //楼层导航切换
+        sidebarRollChange();
+    }
+
+    function rightBar(){  //右侧边栏
+        var $_slidebar4 = $('.ico-slidebar4');
+        $(window).scroll(function(){
+            if($(window).scrollTop()>100){
+                $_slidebar4.css('height',40);
+            }else{
+                $_slidebar4.css('height',0);
+            }
+        })
+        $_slidebar4.click(function () {
+            $('html,body').animate({'scrollTop':0},500)
+        });
+    }
+    function carouselList(wrap,list,item,timeWait,timeRun){ //推荐列表滚动
+        /*
+     * wrap：包裹容器
+     * list：列表容器
+     *item：列表单元
+     *timeWait：停顿时间(单位ms,可不传参数，默认3秒)
+     *timeRun：运动时间(单位ms,可不传参数，默认0.5秒)
+     * */
+        if(timeWait===undefined||typeof timeWait!="number"){
+            timeWait=3000;
+        }
+        if(timeRun===undefined||typeof timeRun!="number"){
+            timeRun=500;
+        }
+        $(wrap).each(function(){
+            var length=$(this).find(item).length;
+            if(length<3){
+                return;
+            }
+            var html=$(this).find(list).html();
+            $(this).find(list).html(html+html);
+            var num=1;
+            var _this=this;
+            function interval(){
+                clearInterval($(_this)[0].timer);
+                $(_this)[0].timer=setInterval(function(){
+                    num++;
+                    if(num==length){
+                        $(_this).find(list).animate({top:-108*num},timeRun,function (){
+                            $(_this).find(list).css('top',0);
+                        });
+                        num=0;
+                    }else{
+                        $(_this).find(list).animate({top:-108*num},timeRun);
+                    }
+                },timeWait);
+            }
+            interval();
+            $(this).find(item).hover(function (){
+                clearInterval($(_this)[0].timer);
+            },function (){
+                interval();
+            })
+        });
+    }
+    function sidebarRollChange() {  //楼层切换
+        var $_floorList=$('.floor');
+        var $_sidebar=$('#floor-nav');
+        $_sidebar.find('li').click(function(){ //点击切换楼层
+            $('html,body').animate({'scrollTop':$_floorList.eq($(this).index()).offset().top},500)
+        });
+        $(window).scroll(function(){
+            var scrollTop=$(window).scrollTop();
+            if(scrollTop<$_floorList.eq(0).offset().top-$(window).height()/2){
+                $_sidebar.hide();
+                return;
+            }
+            $_sidebar.show();  //左边侧边栏显示
+            for(var j=0,k=$_floorList.length;j<k;j++){ /*滚动改变侧边栏的状态*/
+                if(scrollTop>$_floorList.eq(j).offset().top-$(window).height()/2){
+                    $_sidebar.find('li').eq(j).addClass('floor-nav-ac').siblings().removeClass('floor-nav-ac');
+                }
+            }
+        })
+    }
+
+    init();
+</script>
+<script src="/static/index/js/common.js" type="text/javascript" charset="utf-8"></script>
+</body>
+</html>

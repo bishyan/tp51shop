@@ -1,15 +1,37 @@
 <?php
-namespace app\index\controller;
 
-class Index
+/**
+ * 前台首页控制器
+ */
+namespace app\index\controller;
+use think\Controller;
+
+class Index extends Controller
 {
     public function index()
     {
-        return '<style type="text/css">*{ padding: 0; margin: 0; } div{ padding: 4px 48px;} a{color:#2E5CD5;cursor: pointer;text-decoration: none} a:hover{text-decoration:underline; } body{ background: #fff; font-family: "Century Gothic","Microsoft yahei"; color: #333;font-size:18px;} h1{ font-size: 100px; font-weight: normal; margin-bottom: 12px; } p{ line-height: 1.6em; font-size: 42px }</style><div style="padding: 24px 48px;"> <h1>:) </h1><p> ThinkPHP V5.1<br/><span style="font-size:30px">18载初心不改（2006-2018） - 你值得信赖的PHP框架</span></p></div><script type="text/javascript" src="https://tajs.qq.com/stats?sId=64890268" charset="UTF-8"></script><script type="text/javascript" src="https://e.topthink.com/static/admin/client.js"></script><think id="eab4b9f840753f8e7"></think>';
+        $goodsLogic = $this->app->model('goodsLogic', 'logic');
+        // 热门商品
+        $hot_goods = $goodsLogic->getGoodsByWhere('index_hot_goods', ['a.is_hot'=>1, 'a.is_on_sale'=>1]);
+        // 推荐商品
+        $recommend_goods = $goodsLogic->getGoodsByWhere('index_recommend_goods', ['a.is_recommend'=>1, 'a.is_on_sale'=>1]);
+        // 商品分类
+        $goods_category_tree = $goodsLogic->getGoodsCategoryTree();
+
+        $hot_cat_goods = [];
+        foreach ($goods_category_tree as $key=>$val) {
+            if ($val['is_hot'] == 1) {
+                $val['hot_goods'] = isset($hot_goods[$val['cat_id']])? $hot_goods[$val['cat_id']] : [];
+                $val['recommend_goods'] = isset($recommend_goods[$val['cat_id']])? $recommend_goods[$val['cat_id']] : [];
+                $hot_cat_goods[] = $val;
+            }
+        }
+        //dump($hot_cat_goods);
+        //$this->assign('goods_category_tree', $goods_category_tree);
+        $this->assign('hot_cat_goods', $hot_cat_goods);
+
+        return $this->fetch();
     }
 
-    public function hello($name = 'ThinkPHP5')
-    {
-        return 'hello,' . $name;
-    }
+
 }
